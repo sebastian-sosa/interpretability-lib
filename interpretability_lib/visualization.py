@@ -10,19 +10,28 @@ class VisualizationModule:
         Display a heatmap.
 
         Args:
-            heatmap (np.ndarray): The heatmap to display.
+            heatmap (np.ndarray): The heatmap to display. Expected shape is (height, width).
         """
         plt.imshow(heatmap, cmap='hot', interpolation='nearest')
         plt.show()
 
-    def display_overlay(self, image: np.ndarray, heatmap: np.ndarray) -> None:
+    def display_overlay(self, image: np.ndarray, heatmap: np.ndarray, agg_func=np.amax) -> None:
         """
         Display a heatmap overlayed on an image.
 
         Args:
-            image (np.ndarray): The image to display.
-            heatmap (np.ndarray): The heatmap to overlay.
+            image (np.ndarray): The image to display. Expected shape is (height, width, channels).
+            heatmap (np.ndarray): The heatmap to overlay. 
+                Expected shape is (height, width, channels) or (height, width).
+            agg_func (function, optional): The aggregation function to apply across the channel
+                dimension of the heatmap if it has 3 dimensions. Defaults to np.amax.
         """
+        # If the heatmap has 3 dimensions, aggregate across the channel dimension
+        # if len(heatmap.shape) == 3:
+        #     heatmap = agg_func(heatmap, axis=0)
+        if len(heatmap.shape) == 2:
+            heatmap = heatmap[None, :, :]  # Add a singleton dimension
+
         plt.imshow(image)
         plt.imshow(heatmap, cmap='hot', interpolation='nearest', alpha=0.5)
         plt.show()
@@ -32,7 +41,7 @@ class VisualizationModule:
         Display an image.
 
         Args:
-            image (np.ndarray): The image to display.
+            image (np.ndarray): The image to display. Expected shape is (height, width, channels).
         """
         plt.imshow(image)
         plt.show()
@@ -42,7 +51,8 @@ class VisualizationModule:
         Display a grid of images.
 
         Args:
-            images (List[np.ndarray]): The images to display.
+            images (List[np.ndarray]): The images to display. 
+                Each image should have shape (height, width, channels).
             titles (List[str]): The titles for the images.
         """
         n = len(images)
