@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 
-def display_saliency_map(image: Image.Image, heatmap: np.array) -> None:
+def display_saliency_map(image: np.array, heatmap: np.array) -> None:
     """
     Display a heatmap.
 
